@@ -1,5 +1,6 @@
 var fs = require('fs');
 var xml2js = require('xml2js');
+var path = require('path')
 
 
 module.exports = function (context) {
@@ -14,11 +15,16 @@ module.exports = function (context) {
             }
             debugger
             var name = result.widget.name[0] + "-" + (new Date()).format("yyMMddhhmm");
-
-            fs.rename('platforms/android/build/outputs/apk/android-debug.apk', 'platforms/android/build/outputs/apk/' + name + '.apk', function (err) {
-                if (err) console.log('ERROR: ' + err);
-                console.log("Rename success");
-            });
+            var apkPath = "platforms/android/build/outputs/apk/android-debug.apk";
+            var ipaPath = "";
+            if (fs.existsSync(apkPath)) {
+                var newApkPath = "platforms/android/build/outputs/apk/" + name + ".apk";
+                fs.rename(apkPath, newApkPath, function (err) {
+                    if (err) console.log('ERROR: ' + err);
+                    console.log("Rename success");
+                    console.log("new path is " + path.resolve(newApkPath))
+                });
+            }
 
         });
     });
