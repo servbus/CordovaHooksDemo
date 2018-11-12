@@ -16,16 +16,24 @@ module.exports = function (context) {
             debugger
             var name = result.widget.name[0] + "-" + (new Date()).format("yyMMddhhmm");
             var apkPath = "platforms/android/build/outputs/apk/android-debug.apk";
-            var ipaPath = "";
+            var ipaPath = "platforms/ios/build/device/" + result.widget.name[0] + ".ipa";
+            var oldPath = "";
+            var newPath = "";
+            
             if (fs.existsSync(apkPath)) {
-                var newApkPath = "platforms/android/build/outputs/apk/" + name + ".apk";
-                fs.rename(apkPath, newApkPath, function (err) {
-                    if (err) console.log('ERROR: ' + err);
-                    console.log("Rename success");
-                    console.log("new path is " + path.resolve(newApkPath))
-                });
+                oldPath = apkPath;
+                newPath = "platforms/android/build/outputs/apk/" + name + ".apk";
+
+            } else if (fs.existsSync(ipaPath)) {
+                oldPath = ipaPath;
+                newPath = "platforms/ios/build/device/" + name + ".ipa";
             }
 
+            fs.rename(oldPath, newPath, function (err) {
+                if (err) console.log('ERROR: ' + err);
+                console.log("Rename success");
+                console.log("new path is " + path.resolve(newPath))
+            });
         });
     });
 }
